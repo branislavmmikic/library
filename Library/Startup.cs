@@ -1,4 +1,10 @@
+using Library.BLL;
+using Library.BLL.Interfaces;
+using Library.DAL;
+using Library.DAL.Interfaces;
 using Library.Data;
+using Library.UI;
+using Library.UI.Interfaces;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -32,6 +38,11 @@ namespace Library
                     Configuration.GetConnectionString("DefaultConnection")));
             services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
                 .AddEntityFrameworkStores<ApplicationDbContext>();
+
+            services.AddTransient<IBookUI, BookUI>();
+            services.AddTransient<IBookBLL, BookBLL>();
+            services.AddTransient<IBookDAL, BookDAL>();
+
             services.AddControllersWithViews();
             services.AddRazorPages();
         }

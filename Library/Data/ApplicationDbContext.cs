@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿using Library.Models;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -12,5 +13,8 @@ namespace Library.Data
             : base(options)
         {
         }
+        public DbSet<Book> Books { get; set; }
+        public DbSet<IssuedBook> IssuedBooks { get; set; }
+        public DbSet<Reservation> Reservations { get; set; }
     }
 }
