@@ -11,7 +11,7 @@ namespace Library.DAL
 {
     public class BookDAL : IBookDAL
     {
-        private readonly ApplicationDbContext _context;
+        private ApplicationDbContext _context;
         public BookDAL(ApplicationDbContext context)
         {
             _context = context;
@@ -20,6 +20,14 @@ namespace Library.DAL
         public void CreateBook(Book newBook)
         {
             _context.Books.Add(newBook);
+            _context.SaveChanges();
+        }
+
+        public bool FindUserRole(string userId)
+        {
+            var role = _context.UserRoles.Where(x => x.UserId == userId).FirstOrDefault();
+            if (role.RoleId == "1") return true;
+            else return false;
         }
 
         public List<Book> GetAllBooks()

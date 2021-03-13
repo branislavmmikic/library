@@ -11,5 +11,6 @@ namespace Library.UI.Interfaces
     {
         List<Book> GetAllBooks();
         public void CreateBook(Book newBook);
+        bool FindUserRole(string userId);
     }
 }

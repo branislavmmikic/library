@@ -11,5 +11,6 @@ namespace Library.BLL.Interfaces
     {
         List<Book> GetAllBooks();
         void CreateBook(Book newBook);
+        bool FindUserRole(string userId);
     }
 }

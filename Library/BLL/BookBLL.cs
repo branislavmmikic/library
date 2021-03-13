@@ -22,6 +22,11 @@ namespace Library.BLL
             _IBookDAL.CreateBook(newBook);
         }
 
+        public bool FindUserRole(string userId)
+        {
+            return _IBookDAL.FindUserRole(userId);
+        }
+
         public List<Book> GetAllBooks()
         {
             return _IBookDAL.GetAllBooks();

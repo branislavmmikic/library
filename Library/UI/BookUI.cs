@@ -16,6 +16,12 @@ namespace Library.UI
         {
             _IBookBLL = IBookBLL;
         }
+
+        public bool FindUserRole(string userId)
+        {
+            return _IBookBLL.FindUserRole(userId);
+        }
+
         void IBookUI.CreateBook(Book newBook)
         {
             _IBookBLL.CreateBook(newBook);

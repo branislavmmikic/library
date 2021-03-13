@@ -3,6 +3,8 @@ using Library.BLL.Interfaces;
 using Library.DAL;
 using Library.DAL.Interfaces;
 using Library.Data;
+using Library.Services;
+using Library.Services.Interfaces;
 using Library.UI;
 using Library.UI.Interfaces;
 using Microsoft.AspNetCore.Builder;
@@ -42,6 +44,13 @@ namespace Library
             services.AddTransient<IBookUI, BookUI>();
             services.AddTransient<IBookBLL, BookBLL>();
             services.AddTransient<IBookDAL, BookDAL>();
+            services.AddTransient<IReservationUI, ReservationUI>();
+            services.AddTransient<IReservationBLL, ReservationBLL>();
+            services.AddTransient<IReservationDAL, ReservationDAL>();
+            services.AddTransient<IReservationService, ReservationService>();
+            services.AddTransient<IBookService, BookService>();
+
+            services.AddHttpContextAccessor();
 
             services.AddControllersWithViews();
             services.AddRazorPages();
