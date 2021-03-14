@@ -1,0 +1,24 @@
+﻿@model Library.Models.ReservationViewModel
+
+@{
+    ViewData["Title"] = "UserIndex";
+}
+
+<h1>Your reservations</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Book</th>
+            <th>Status</th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model.reservations) {
+        <tr>
+            <td>Title</td>
+            <td>Pending</td>
+        </tr>
+}
+    </tbody>
+</table>

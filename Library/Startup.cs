@@ -44,11 +44,15 @@ namespace Library
             services.AddTransient<IBookUI, BookUI>();
             services.AddTransient<IBookBLL, BookBLL>();
             services.AddTransient<IBookDAL, BookDAL>();
+            services.AddTransient<IBookService, BookService>();
             services.AddTransient<IReservationUI, ReservationUI>();
             services.AddTransient<IReservationBLL, ReservationBLL>();
             services.AddTransient<IReservationDAL, ReservationDAL>();
             services.AddTransient<IReservationService, ReservationService>();
-            services.AddTransient<IBookService, BookService>();
+            services.AddTransient<IIssuedBookUI, IssuedBookUI>();
+            services.AddTransient<IIssuedBookBLL, IssuedBookBLL>();
+            services.AddTransient<IIssuedBookDAL, IssuedBookDAL>();
+            services.AddTransient<IIssuedBookService, IssuedBookService>();
 
             services.AddHttpContextAccessor();
 

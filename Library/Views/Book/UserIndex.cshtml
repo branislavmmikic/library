@@ -1,0 +1,51 @@
+﻿@model Library.Models.BookViewModel
+
+@{
+    ViewData["Title"] = "UserIndex";
+}
+@{
+    Layout = "_Layout";
+}
+
+<h1>Books</h1>
+
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Book</th>
+            <th>Author</th>
+            <th>Available</th>
+            <th>Reserve</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.books)
+        {
+        <tr>
+            <td>@item.Title</td>
+            <td>@item.Author</td>
+            <td>@{
+                if (item.Quantity > 0)
+                {
+                    <span>Yes</span>
+                }
+                else
+                {
+                    <span>No</span>
+                }
+            }</td>
+            <td>@{
+                if (item.Quantity > 0)
+                {
+                <button>Reserve</button>
+                }
+                else
+                {
+                <button disabled>Reserve</button>
+                }
+                }</td>
+        </tr>
+        }
+    </tbody>
+</table>

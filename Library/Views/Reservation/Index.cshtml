@@ -3,27 +3,31 @@
 @{
     ViewData["Title"] = "Index";
 }
+@{
+    Layout = "_Layout";
+}
+
 
 <h1>Index</h1>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
 <table class="table">
     <thead>
         <tr>
-            <th></th>
+            <th>Book</th>
+            <th>User</th>
+            <th>Approve</th>
+            <th>Dissaprove</th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model.reservations) {
+        @foreach (var item in Model.reservations)
+        {
         <tr>
-            <td>
-                @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
-                @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
-                @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
-            </td>
+            <td>@item.BookId</td>
+            <td>@item.UserId</td>
+            <td><button>Approve</button></td>
+            <td><button>Dissaprove</button></td>
         </tr>
-}
+        }
     </tbody>
 </table>

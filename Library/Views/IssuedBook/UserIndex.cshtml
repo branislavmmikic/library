@@ -1,0 +1,24 @@
+﻿@model Library.Models.IssuedBookViewModel
+
+@{
+    ViewData["Title"] = "UserIndex";
+}
+
+<h1>Books issued to you</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Book title</th>
+            <th>Due date</th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model.issuedBooks) {
+        <tr>
+            <td>@item.BookId</td>
+            <td>@item.Date</td>
+        </tr>
+}
+    </tbody>
+</table>

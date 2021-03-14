@@ -3,7 +3,9 @@
 @{
     ViewData["Title"] = "Index";
 }
-
+@{
+    Layout = "_Layout";
+}
 <h1>All books</h1>
 
 <p>
@@ -12,14 +14,19 @@
 <table class="table">
     <thead>
         <tr>
-            <th>Book</th><th>Author</th><th>Quantity Available</th>
+            <th>Book</th>
+            <th>Author</th>
+            <th>Quantity Available</th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model.books) {
-        <tr>
-            <td>@item.Title</td><td>@item.Author</td><td>@item.Quantity</td>
-        </tr>
-}
+        @foreach (var item in Model.books)
+        {
+            <tr>
+                <td>@item.Title</td>
+                <td>@item.Author</td>
+                <td>@item.Quantity</td>
+            </tr>
+        }
     </tbody>
 </table>

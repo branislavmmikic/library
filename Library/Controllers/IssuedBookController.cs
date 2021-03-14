@@ -5,24 +5,23 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace Library.Controllers
 {
-    public class ReservationController : Controller
+    public class IssuedBookController : Controller
     {
-        private readonly IReservationService _service;
+        private readonly IIssuedBookService _service;
         private readonly string _userId;
-        public ReservationController(IReservationService service, IHttpContextAccessor httpContextAccessor)
+        public IssuedBookController(IIssuedBookService service, IHttpContextAccessor httpContextAccessor)
         {
             _service = service;
             _userId = httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
         }
         public IActionResult Index()
         {
-            ReservationViewModel bvm = _service.Index();
+            IssuedBookViewModel bvm = _service.Index();
             if (_service.FindUserRole(_userId).Equals(true))
                 return View(bvm);
             else
@@ -32,10 +31,14 @@ namespace Library.Controllers
         {
             return View();
         }
-        [HttpPost]
-        public ActionResult Create(Reservation newReservation)
+        public IActionResult UserIndex(IssuedBookViewModel bvm)
         {
-            _service.Create(newReservation);
+            return View(bvm);
+        }
+        [HttpPost]
+        public ActionResult Create(IssuedBook newIssuedBook)
+        {
+            _service.Create(newIssuedBook);
             return RedirectToAction("Index");
         }
     }

@@ -4,12 +4,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Library.UI.Interfaces
+namespace Library.Services.Interfaces
 {
-    public interface IIssuedBookUI
+    public interface IIssuedBookService
     {
-        public List<IssuedBook> GetAllIssuedBooks();
-        public void CreateIssuedBook(IssuedBook newIssuedBook);
+        public IssuedBookViewModel Index();
+        public void Create(IssuedBook newIssuedBook);
         public bool FindUserRole(string userId);
     }
 }
