@@ -1,4 +1,4 @@
-﻿@model Library.Models.IssuedBookViewModel
+﻿@model Library.Models.IssuedBooksViewModel
 
 @{
     ViewData["Title"] = "Index";
@@ -16,13 +16,23 @@
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model.issuedBooks) {
-        <tr>
-            <td>@item.BookId</td>
-            <td>@item.UserId</td>
-            <td>@item.Date</td>
-            <td><button>Return</button></td>
-        </tr>
-}
+        @{if (Model.IssuedBooks != null)
+            { 
+                @foreach (var item in Model.IssuedBooks)
+                {
+                    <tr>
+                        <td>@item.BookTitle</td>
+                        <td>@item.UserName</td>
+                        <td>@item.Date.ToString("dd/MMMM/yyyy")</td>
+                        <td>
+                            <form asp-controller="IssuedBook" asp-action="ReturnBook" method="post">
+                             <input type="hidden" id="issuedBookId" name="issuedBookId" value="@item.IssuedBookId" />
+                             <button class="btn btn-primary" type="submit">Return book</button>
+                            </form>
+                        </td>
+                    </tr>
+                }
+            }
+        }
     </tbody>
 </table>

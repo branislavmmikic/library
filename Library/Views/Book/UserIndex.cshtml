@@ -1,4 +1,4 @@
-﻿@model Library.Models.BookViewModel
+﻿@model Library.Models.BooksViewModel
 
 @{
     ViewData["Title"] = "UserIndex";
@@ -20,7 +20,7 @@
         </tr>
     </thead>
     <tbody>
-        @foreach (var item in Model.books)
+        @foreach (var item in Model.Books)
         {
         <tr>
             <td>@item.Title</td>
@@ -36,14 +36,10 @@
                 }
             }</td>
             <td>@{
-                if (item.Quantity > 0)
-                {
-                <button>Reserve</button>
-                }
-                else
-                {
-                <button disabled>Reserve</button>
-                }
+                    <form asp-controller="Book" asp-action="CreateReservation" method="post">
+                        <input type="hidden" id="bookId" name="bookId" value="@item.BookId" />
+                        <button class="btn btn-primary" type="submit" @(item.Clickable == false ? "disabled" : string.Empty)>Reserve</button>
+                    </form>
                 }</td>
         </tr>
         }

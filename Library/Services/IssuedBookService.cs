@@ -1,35 +1,65 @@
-﻿using Library.Models;
+﻿using Library.DAL.Interfaces;
+using Library.Models;
 using Library.Services.Interfaces;
-using Library.UI.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using Library.SignarR;
+using Microsoft.AspNetCore.SignalR;
 
 namespace Library.Services
 {
     public class IssuedBookService : IIssuedBookService
     {
-        private readonly IIssuedBookUI _IIssuedBookUI;
-        public IssuedBookService(IIssuedBookUI IIssuedBookUI)
+        private readonly IIssuedBookDAL _IIssuedBookDAL;
+        private readonly IHubContext<SignalRHub> _signalRHub;
+        public IssuedBookService(IIssuedBookDAL IIssuedBookDAL, IHubContext<SignalRHub> signalRHub)
         {
-            _IIssuedBookUI = IIssuedBookUI;
+            _IIssuedBookDAL = IIssuedBookDAL;
+            _signalRHub = signalRHub;
         }
-        public IssuedBookViewModel Index()
+        public IssuedBooksViewModel GetAllIssuedBook()
         {
-            var issuedBooks = _IIssuedBookUI.GetAllIssuedBooks();
-            IssuedBookViewModel ibvm = new IssuedBookViewModel();
-            ibvm.issuedBooks = issuedBooks;
-            return ibvm;
+            var issuedBooks = _IIssuedBookDAL.GetAllIssuedBooks();
+            IssuedBookViewModel newRes;
+            IssuedBooksViewModel rvm = new IssuedBooksViewModel();
+            if (issuedBooks != null)
+                foreach (var r in issuedBooks)
+                {
+                    var title = _IIssuedBookDAL.GetBookTitleById(r.BookId);
+                    var userName = _IIssuedBookDAL.GetUserNameById(r.UserId);
+                    newRes = new IssuedBookViewModel() { Date = r.Date,  BookTitle = title, UserName = userName, BookId = r.BookId, UserId = r.UserId, IssuedBookId = r.IssuedBookId };
+                    rvm.IssuedBooks.Add(newRes);
+                }
+            return rvm;
         }
-        public void Create(IssuedBook newIssuedBook)
+        public IssuedBooksViewModel GetAllIssuedBooksByUser(string userId)
         {
-            _IIssuedBookUI.CreateIssuedBook(newIssuedBook);
+            var issuedBooks = _IIssuedBookDAL.GetAllIssuedBooksByUser(userId);
+            IssuedBookViewModel newRes;
+            IssuedBooksViewModel rvm = new IssuedBooksViewModel();
+            if (issuedBooks != null)
+                foreach (var r in issuedBooks)
+                {
+                    var title = _IIssuedBookDAL.GetBookTitleById(r.BookId);
+                    var userName = _IIssuedBookDAL.GetUserNameById(r.UserId);
+                    newRes = new IssuedBookViewModel() { Date = r.Date, BookTitle = title, UserName = userName, BookId = r.BookId, UserId = r.UserId, IssuedBookId = r.IssuedBookId };
+                    rvm.IssuedBooks.Add(newRes);
+                }
+            return rvm;
         }
-
         public bool FindUserRole(string userId)
         {
-            return _IIssuedBookUI.FindUserRole(userId);
+            return _IIssuedBookDAL.FindUserRole(userId);
+        }
+
+        public void CreateIssuedBook(int reservationId, string userId, int bookId)
+        {
+            _IIssuedBookDAL.DeleteReservation(reservationId);
+            _signalRHub.Clients.All.SendAsync("IssuedBookCreated", reservationId);
+            _IIssuedBookDAL.CreateIssuedBook(userId, bookId);
+        }
+
+        public void ReturnBook(int issuedBook)
+        {
+            IssuedBook ReturnedBook = _IIssuedBookDAL.ReturnBook(issuedBook);
         }
     }
 }

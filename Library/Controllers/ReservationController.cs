@@ -1,5 +1,6 @@
 ﻿using Library.Models;
 using Library.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -11,32 +12,35 @@ using System.Threading.Tasks;
 
 namespace Library.Controllers
 {
+    [Authorize]
     public class ReservationController : Controller
     {
         private readonly IReservationService _service;
-        private readonly string _userId;
-        public ReservationController(IReservationService service, IHttpContextAccessor httpContextAccessor)
+        public ReservationController(IReservationService service)
         {
             _service = service;
-            _userId = httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
         }
+
         public IActionResult Index()
         {
-            ReservationViewModel bvm = _service.Index();
-            if (_service.FindUserRole(_userId).Equals(true))
+            var userId = HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
+
+            if (_service.FindUserRole(userId).Equals(true))
+            {
+                var bvm = _service.GetAllReservations();
                 return View(bvm);
+            }
             else
+            {
+                var bvm = _service.GetAllReservationsByUser(userId);
                 return View("UserIndex", bvm);
-        }
-        public IActionResult Create()
-        {
-            return View();
+            }
         }
         [HttpPost]
-        public ActionResult Create(Reservation newReservation)
+        public IActionResult DeleteReservation([FromForm(Name = "reservationId")] int ReservationId)
         {
-            _service.Create(newReservation);
-            return RedirectToAction("Index");
+            _service.DeleteReservation(ReservationId);
+            return RedirectToAction("Index", "Reservation");
         }
     }
 }

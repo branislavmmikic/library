@@ -1,36 +1,39 @@
-﻿using Library.Models;
+﻿using Library.DAL.Interfaces;
+using Library.Models;
 using Library.Services.Interfaces;
-using Library.UI.Interfaces;
-using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Library.Services
 {
     public class BookService : IBookService
     {
-        private readonly IBookUI _IBookUI;
-        public BookService(IBookUI IBookUI)
+        private readonly IBookDAL _IBookDAL;
+        public BookService(IBookDAL IBookDAL)
         {
-            _IBookUI = IBookUI;
+            _IBookDAL = IBookDAL;
         }
-        public BookViewModel Index()
+        public BooksViewModel GetAllBooks(string userId)
         {
-            var books = _IBookUI.GetAllBooks();
-            BookViewModel bvm = new BookViewModel();
-            bvm.books = books;
+            var books = _IBookDAL.GetAllBooks();
+            bool res;
+            BookViewModel newBook;
+            BooksViewModel bvm = new BooksViewModel();
+            foreach(var b in books)
+            {
+                res = _IBookDAL.IsReservable(b.BookId, userId);
+                newBook = new BookViewModel() { Author = b.Author, BookId = b.BookId, Quantity = b.Quantity, Title = b.Title, Clickable = res };
+                bvm.Books.Add(newBook);
+            }
             return bvm;
         }
         public void Create(Book newBook)
         {
-            _IBookUI.CreateBook(newBook);
+            _IBookDAL.CreateBook(newBook);
         }
 
         public bool FindUserRole(string userId)
         {
-            return _IBookUI.FindUserRole(userId);
+            return _IBookDAL.FindUserRole(userId);
         }
+
     }
 }

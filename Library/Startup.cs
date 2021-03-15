@@ -1,25 +1,15 @@
-using Library.BLL;
-using Library.BLL.Interfaces;
 using Library.DAL;
 using Library.DAL.Interfaces;
 using Library.Data;
 using Library.Services;
 using Library.Services.Interfaces;
-using Library.UI;
-using Library.UI.Interfaces;
+using Library.SignarR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.UI;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Library
 {
@@ -41,19 +31,14 @@ namespace Library
             services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
                 .AddEntityFrameworkStores<ApplicationDbContext>();
 
-            services.AddTransient<IBookUI, BookUI>();
-            services.AddTransient<IBookBLL, BookBLL>();
             services.AddTransient<IBookDAL, BookDAL>();
             services.AddTransient<IBookService, BookService>();
-            services.AddTransient<IReservationUI, ReservationUI>();
-            services.AddTransient<IReservationBLL, ReservationBLL>();
             services.AddTransient<IReservationDAL, ReservationDAL>();
             services.AddTransient<IReservationService, ReservationService>();
-            services.AddTransient<IIssuedBookUI, IssuedBookUI>();
-            services.AddTransient<IIssuedBookBLL, IssuedBookBLL>();
             services.AddTransient<IIssuedBookDAL, IssuedBookDAL>();
             services.AddTransient<IIssuedBookService, IssuedBookService>();
 
+            services.AddSignalR();
             services.AddHttpContextAccessor();
 
             services.AddControllersWithViews();
@@ -63,12 +48,12 @@ namespace Library
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-                app.UseDatabaseErrorPage();
-            }
-            else
+            //if (env.IsDevelopment())
+            //{
+            //    app.UseDeveloperExceptionPage();
+            //    app.UseDatabaseErrorPage();
+            //}
+            //else
             {
                 app.UseExceptionHandler("/Home/Error");
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
@@ -84,6 +69,7 @@ namespace Library
 
             app.UseEndpoints(endpoints =>
             {
+                endpoints.MapHub<SignalRHub>("/hub");
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");

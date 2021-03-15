@@ -1,4 +1,4 @@
-﻿@model Library.Models.ReservationViewModel
+﻿@model Library.Models.ReservationsViewModel
 
 @{
     ViewData["Title"] = "UserIndex";
@@ -14,11 +14,19 @@
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model.reservations) {
-        <tr>
-            <td>Title</td>
-            <td>Pending</td>
-        </tr>
-}
+        @{ if (Model.Reservations != null)
+            {
+                @foreach (var item in Model.Reservations)
+                {
+                    <tr id="@item.ReservationId">
+                        <td>@item.BookTitle</td>
+                        <td>Pending...</td>
+                    </tr>
+                }
+            }
+        }
     </tbody>
 </table>
+
+<script src="~/js/signalr/dist/browser/signalr.js"></script>
+<script src="~/js/signalRhub.js"></script>

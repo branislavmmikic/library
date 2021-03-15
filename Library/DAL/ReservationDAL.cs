@@ -22,6 +22,19 @@ namespace Library.DAL
             _context.SaveChanges();
         }
 
+        public void DeleteReservation(int reservationId)
+        {
+            var res = _context.Reservations.Where(r => r.ReservationId == reservationId).FirstOrDefault();
+            if(res != null)
+            {
+                var book = _context.Books.Where(r => r.BookId == res.BookId).FirstOrDefault();
+                if (book != null)
+                    ++book.Quantity;
+                _context.Remove(res);
+                _context.SaveChanges();
+            }
+        }
+
         public bool FindUserRole(string userId)
         {
             var role = _context.UserRoles.Where(x => x.UserId == userId).FirstOrDefault();
@@ -32,6 +45,26 @@ namespace Library.DAL
         public List<Reservation> GetAllReservations()
         {
             return _context.Reservations.ToList();
+        }
+
+        public List<Reservation> GetAllReservationsByUser(string userId)
+        {
+            return _context.Reservations.Where(r => r.UserId == userId).ToList();
+        }
+
+        public string GetBookTitleById(int id)
+        {
+            return _context.Books.Where(r => r.BookId == id).FirstOrDefault().Title.ToString();
+        }
+
+        public string GetUserNameById(string id)
+        {
+            return _context.Users.Where(r => r.Id == id).FirstOrDefault().UserName.ToString();
+        }
+
+        public bool IsBookReservedByUser(int bookId, string userId)
+        {
+            return _context.Reservations.FirstOrDefault(r => r.UserId == userId && r.BookId == bookId) != null;
         }
     }
 }

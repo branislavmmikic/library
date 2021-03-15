@@ -9,7 +9,12 @@ namespace Library.DAL.Interfaces
     public interface IIssuedBookDAL
     {
         List<IssuedBook> GetAllIssuedBooks();
-        void CreateIssuedBook(IssuedBook newIssuedBook);
         bool FindUserRole(string userId);
+        public void DeleteReservation(int reservationId);
+        void CreateIssuedBook(string userId, int bookId);
+        string GetBookTitleById(int bookId);
+        string GetUserNameById(string userId);
+        List<IssuedBook> GetAllIssuedBooksByUser(string userId);
+        IssuedBook ReturnBook(int issuedBook);
     }
 }

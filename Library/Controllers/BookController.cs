@@ -1,30 +1,30 @@
 ﻿using Library.Models;
 using Library.Services.Interfaces;
-using Library.UI.Interfaces;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace Library.Controllers
 {
+    [Authorize]
     public class BookController : Controller
     {
         private readonly IBookService _service;
-        private readonly string _userId;
-        public BookController(IBookService service, IHttpContextAccessor httpContextAccessor)
+        private readonly IReservationService _reservationService;
+        public BookController(IBookService service, IReservationService reservationService)
         {
             _service = service;
-            _userId = httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            _reservationService = reservationService;
         }
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            BookViewModel bvm =_service.Index();
-            if (_service.FindUserRole(_userId).Equals(true))
+            var authResult = await HttpContext.AuthenticateAsync();
+            var userId = authResult.Principal.FindFirst(ClaimTypes.NameIdentifier).Value;
+            BooksViewModel bvm =_service.GetAllBooks(userId);
+            if (_service.FindUserRole(userId).Equals(true))
                 return View(bvm);
             else
                 return View("UserIndex", bvm);
@@ -33,15 +33,24 @@ namespace Library.Controllers
         {
             return View();
         }
-        public IActionResult UserIndex(BookViewModel bvm)
+        public IActionResult UserIndex(BooksViewModel bvm)
         {
             return View(bvm);
         }
         [HttpPost]
-        public ActionResult Create(Book newBook)
+        public IActionResult Create(Book newBook)
         {
             _service.Create(newBook);
             return RedirectToAction("Index");
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CreateReservation([FromForm(Name = "bookId")] int bookId)
+        {
+            var authResult = await HttpContext.AuthenticateAsync();
+            var userId = authResult.Principal.FindFirst(ClaimTypes.NameIdentifier).Value.ToString();
+            var result = _reservationService.Create(bookId, userId);
+            return RedirectToAction("Index", "Book");
         }
     }
 }

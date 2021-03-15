@@ -1,4 +1,4 @@
-﻿@model Library.Models.ReservationViewModel
+﻿@model Library.Models.ReservationsViewModel
 
 @{
     ViewData["Title"] = "Index";
@@ -8,9 +8,9 @@
 }
 
 
-<h1>Index</h1>
+<h1>Pending reservations</h1>
 
-<table class="table">
+<table class="table" id="reservations-table">
     <thead>
         <tr>
             <th>Book</th>
@@ -20,14 +20,33 @@
         </tr>
     </thead>
     <tbody>
-        @foreach (var item in Model.reservations)
-        {
-        <tr>
-            <td>@item.BookId</td>
-            <td>@item.UserId</td>
-            <td><button>Approve</button></td>
-            <td><button>Dissaprove</button></td>
-        </tr>
-        }
+        @{ if (Model.Reservations != null)
+            {
+                @foreach (var item in Model.Reservations)
+                {
+                <tr>
+                    <td>@item.BookTitle</td>
+                    <td>@item.UserName</td>
+                    <td>
+                        <form asp-controller="IssuedBook" asp-action="CreateIssuedBook" method="post">
+                            <input type="hidden" id="bookId" name="bookId" value="@item.BookId" />
+                            <input type="hidden" id="userId" name="userId" value="@item.UserId" />
+                            <input type="hidden" id="reservationId" name="reservationId" value="@item.ReservationId" />
+                            <button class="btn btn-primary" type="submit">Approve</button>
+                        </form>
+                    </td>
+                    <td>
+                        <form asp-controller="Reservation" asp-action="DeleteReservation" method="post">
+                            <input type="hidden" id="reservationId" name="reservationId" value="@item.ReservationId" />
+                            <button class="btn btn-danger" type="submit" >Dissaprove</button>
+                        </form>
+                    </td>
+                </tr>
+                }
+                }
+            }
     </tbody>
 </table>
+
+<script src="~/js/signalr/dist/browser/signalr.js"></script>
+<script src="~/js/signalRhub.js"></script>
