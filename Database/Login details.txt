@@ -1,0 +1,10 @@
+Login details for accounts:
+-Admin(Librarian)
+admin@admin.com @Dmin1234
+-Users
+user@user.com US@r1234
+user2@user.com US@r1234
+user3@user.com US@r1234   
+
+Format:
+[username] [password]
